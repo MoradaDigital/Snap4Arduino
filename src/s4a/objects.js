@@ -11,7 +11,22 @@ SpriteMorph.prototype.init = function(globals) {
 SpriteMorph.prototype.categories.push('arduino');
 SpriteMorph.prototype.blockColor['arduino'] = new Color(24, 167, 181);
 
+SpriteMorph.prototype.categories.push('Eureka');
+SpriteMorph.prototype.blockColor['Eureka'] = new Color(255, 214, 0);
+
+SpriteMorph.prototype.initEurekaBlocks = function(){
+    this.blocks.conectarPlaca =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'Conectar plana na porta %s'
+    };
+
+}
+
 SpriteMorph.prototype.originalInitBlocks = SpriteMorph.prototype.initBlocks;
+
 SpriteMorph.prototype.initArduinoBlocks = function () {
 
     this.blocks.reportAnalogReading = 
@@ -173,9 +188,12 @@ SpriteMorph.prototype.initArduinoBlocks = function () {
     StageMorph.prototype.codeMappings['pwmWrite'] = '  s4a.analogWrite(<#1>, <#2>);';
 }
 
+SpriteMorph.prototype.eurekaInitBlocks = SpriteMorph.prototype.eurekainitBlocks;
+
 SpriteMorph.prototype.initBlocks =  function() {
     this.originalInitBlocks();
     this.initArduinoBlocks();
+    this.initEurekaBlocks();
 };
 
 SpriteMorph.prototype.initBlocks();
@@ -198,6 +216,15 @@ SpriteMorph.prototype.blockTemplates = function (category) {
             );
 
     //  Button that triggers a disconnection from board
+
+    this.eurekaConnectButton = new PushButtonMorph(
+        null,
+        function(){
+            myself.arduino.attemptConnection();
+        },
+        'Conectar à Placa'
+    );
+    
 
     this.arduinoDisconnectButton = new PushButtonMorph(
             null,
@@ -317,6 +344,9 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         button.selector = 'addCustomBlock';
         button.showHelp = BlockMorph.prototype.showHelp;
         blocks.push(button);
+    }else if (category === 'Eureka'){
+        blocks.push(this.eurekaConnectButton);
+        blocks.push(blockBySelector('conectarPlaca'));
     }
 
     return blocks;
