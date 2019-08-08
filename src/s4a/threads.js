@@ -82,9 +82,12 @@ Process.prototype.LedDados = function (port) {
 
 Process.prototype.disconectartArduino = function (port) {
     var sprite = this.blockReceiver();
-    if(sprite.arduino.port != ' '){
+        if(sprite.arduino.port != ' '){
         sprite.arduino.port = ' ';
-    }        
+        sprite.arduino.serial.close(function(err){
+            console.log('failed to open: '+err);
+          });
+    }       
 };
 Process.prototype.conectado = function (port) {
     var sprite = this.blockReceiver();
