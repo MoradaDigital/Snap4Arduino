@@ -4,6 +4,7 @@ SpriteMorph.prototype.originalInit = SpriteMorph.prototype.init;
 SpriteMorph.prototype.init = function(globals) {
     this.originalInit(globals);
     this.arduino = new Arduino(this);
+   
 };
 
 // Definition of a new Arduino Category
@@ -20,7 +21,70 @@ SpriteMorph.prototype.initEurekaBlocks = function(){
         only: SpriteMorph,
         type: 'command',
         category: 'Eureka',
-        spec: 'Conectar plana na porta %s'
+        spec: 'Conectar placa na porta %s'
+    };
+    this.blocks.enviarDado =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'Enviar %s'
+    };
+    this.blocks.enviarDadoParaPorta =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'Enviar %s para porta %s'
+    };
+    this.blocks.conectado =
+    {
+        only: SpriteMorph,
+        type: 'predicate',
+        category: 'Eureka',
+        spec: 'conectado?',
+        transpilable: false
+    };
+
+    this.blocks.conectadoPlaca =
+    {
+        only: SpriteMorph,
+        type: 'predicate',
+        category: 'Eureka',
+        spec: 'conectado %s ?',
+        transpilable: false
+    };
+    this.blocks.LedDados = 
+    {
+        only: SpriteMorph,
+        type: 'reporter',
+        category: 'Eureka',
+        spec: 'Ler %s',
+        transpilable: true
+    };
+    this.blocks.PortaConectada = 
+    {
+        only: SpriteMorph,
+        type: 'reporter',
+        category: 'Eureka',
+        spec: 'Porta conectada?',
+        transpilable: true
+    };
+    this.blocks.LedDadosDaPorta = 
+    {
+        only: SpriteMorph,
+        type: 'reporter',
+        category: 'Eureka',
+        spec: 'Ler %s da porta %s',
+        transpilable: true
+    };
+  
+    this.blocks.disconectartArduino =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'desconectar'
     };
 
 }
@@ -220,7 +284,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
     this.eurekaConnectButton = new PushButtonMorph(
         null,
         function(){
-            myself.arduino.attemptConnection();
+            myself.arduino.attemptConnection2();
         },
         'Conectar à Placa'
     );
@@ -346,7 +410,22 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push(button);
     }else if (category === 'Eureka'){
         blocks.push(this.eurekaConnectButton);
+        blocks.push('-');
         blocks.push(blockBySelector('conectarPlaca'));
+        blocks.push(blockBySelector('enviarDado'));
+       
+        blocks.push('-');
+        blocks.push(blockBySelector('conectado'));
+        blocks.push(blockBySelector('conectadoPlaca'));
+        blocks.push(blockBySelector('PortaConectada'));
+        blocks.push(blockBySelector('disconectartArduino'));
+        blocks.push('-');
+        blocks.push(blockBySelector('LedDados'));
+        blocks.push('-');
+        blocks.push(blockBySelector('LedDadosDaPorta'));
+        blocks.push(blockBySelector('enviarDadoParaPorta'));
+        
+        blocks.push(this.makeBlockButton());
     }
 
     return blocks;

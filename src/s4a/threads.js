@@ -1,3 +1,6 @@
+var port2 = ' '
+var datareturn = ' '
+var portatemp = ' '
 Process.prototype.connectArduino = function (port) {
     var sprite = this.blockReceiver();
 
@@ -27,7 +30,221 @@ Process.prototype.connectArduino = function (port) {
     this.pushContext('doYield');
     this.pushContext();
 };
+Process.prototype.conectarPlaca = function (port) {
+    var sprite = this.blockReceiver();
+    const SerialPort = require("browser-serialport").SerialPort 
+    if(sprite.arduino.port != port){
+        sprite.arduino.serial = new SerialPort(port, {
+            baudrate: 57600
+           }, false); 
+           sprite.arduino.serial.open(function (error) {
+        if ( error ) {
+            console.log('failed to open: '+error);
+            sprite.arduino.port = ' '
+        } else {
+            sprite.arduino.port = port
+            console.log('open');
+        }
+        });
+    }
+};
+Process.prototype.enviarDado = function (port) {
+    var sprite = this.blockReceiver();
+    if(sprite.arduino.port == ' '){
+        throw new Error(localize('Arduino not connected'));	
+    }else{
+        sprite.arduino.serial.write(port, function(err, results) {
+            sprite.arduino.serial.on('data', function(data) {
+            });
+          });
+    }
+};
+Process.prototype.PortaConectada = function (port) {
+    var sprite = this.blockReceiver();
+    if(sprite.arduino.port == ' '){
+        throw new Error(localize('Nenhuma porta conectada'));	
+    }else{
+        return sprite.arduino.port
+    }
+};
+Process.prototype.enviarDadoParaPorta = function (dado,porta) {
+    var sprite = this.blockReceiver();
+    if(sprite.arduino.port != porta){
+        var serial;
+        const SerialPort = require("browser-serialport").SerialPort 
+        serial = new SerialPort(porta, {
+            baudrate: 57600
+           }, false); 
+           serial.open(function (error) {
+        if ( error ) {
+            console.log('failed to open: '+error);
+        } else {
+            console.log('Conexao aberta.');
+            serial.write(dado, function(err, results) {
+                serial.on('data', function(data) {
+                });
+                serial.close(function(err){
+                    console.log('Conexao encerrada.');
+                  });
+              });
+           
+        }
+        });
+    }else{
+        sprite.arduino.serial.write(dado, function(err, results) {
+            sprite.arduino.serial.on('data', function(data) {
+            });
+          });
+    }
+};
+Process.prototype.LedDados = function (port) {
+    var sprite = this.blockReceiver();
+    if(sprite.arduino.port != ' '){
+    if(port2 != port){
+    if(datareturn == ' '){
+        sprite.arduino.serial.write(port, function(err, results) {
+            sprite.arduino.serial.on('data', function(data) {
+                port2 = port
+                datareturn = data
+            });
+            });
+    }
+    }else{
+        sprite.arduino.serial.write(port, function(err, results) {
+            sprite.arduino.serial.on('data', function(data) {
+                this.datareturn = data
+            });
+          });
+        return datareturn
+    }
+   }else{
+    return 'Nao existe uma porta conectada'
+   }
+};
+Process.prototype.LedDadosDaPorta = function (dados,porta) {
+    var sprite = this.blockReceiver();
+    if(porta ==''){
+        return 'Nao existe uma porta conectada'
+    }
+    if(sprite.arduino.port == porta){
+    if(port2 != dados){
+    if(datareturn == ' '){
+        sprite.arduino.serial.write(dados, function(err, results) {
+            sprite.arduino.serial.on('data', function(data) {
+                port2 = dados
+                datareturn = data
+            });
+            });
+    }
+    }else{
+        sprite.arduino.serial.write(dados, function(err, results) {
+            sprite.arduino.serial.on('data', function(data) {
+                this.datareturn = data
+            });
+          });
+        return datareturn
+    }
+   }else{
+        var serial;
+        const SerialPort = require("browser-serialport").SerialPort 
+        if(portatemp != porta){
+            if(port2 != dados){
+                if(datareturn == ' '){
+                    serial = new SerialPort(porta, {
+                        baudrate: 57600
+                    }, false); 
+                    serial.open(function (error) {
+                    if ( error ) {
+                        console.log('failed to open: '+error);
+                    } else {
+                        portatemp = porta
+                        console.log('open');
+                        serial.write(dados, function(err, results) {
+                            serial.on('data', function(data) {
+                                port2 = dados
+                                datareturn = data
+                            });
+                            });
+                        }
+                    });
+            }
+        }
+        }else{
+            return datareturn
+        }
+   
+ }
+};
+Process.prototype.Lertimeout = function (dados,time) {
+    var sprite = this.blockReceiver();
+    if(sprite.arduino.port != ' '){
+        if(port2 != dados){
+        if(datareturn == ' '){
+            sprite.arduino.serial.write(dados, function(err, results) {
+                sprite.arduino.serial.on('data', function(data) {
+                    port2 = dados
+                    datareturn = data
+                    console.log('Tempo:xxdxx '+data);
+                });
+                });
+        }
+        }else{
+            sprite.arduino.serial.write(dados, function(err, results) {
+                sprite.arduino.serial.on('data', function(data) {
+                    this.datareturn = data
+                    console.log('Tempo:xxdxx '+data);
+                });
+              });
+        }
+        while(time > 0){
+            sleep(1000)
+            console.log('Tempo: '+time);
+            time--            
+        }
+       }else{
+        return 'Nao existe uma porta conectada'
+       }
+   
+       console.log('Tempo zero: '+this.datareturn);
+       return this.datareturn
+};
 
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+      if ((new Date().getTime() - start) > milliseconds){
+        break;
+      }
+    }
+};
+  
+Process.prototype.disconectartArduino = function (port) {
+    var sprite = this.blockReceiver();
+    if(sprite.arduino.port != ' '){
+        sprite.arduino.port = ' ';
+        sprite.arduino.serial.close(function(err){
+            console.log('failed to open: '+err);
+          });
+    }        
+};
+Process.prototype.conectado = function (port) {
+    var sprite = this.blockReceiver();
+    if(sprite.arduino.port != ' '){
+        return true;
+    }else{
+        return false;
+    }        
+};
+ 
+
+Process.prototype.conectadoPlaca = function (port) {
+    var sprite = this.blockReceiver();
+    if(sprite.arduino.port == port){
+        return true;
+    }else{
+        return false
+    }        
+};
 Process.prototype.disconnectArduino = function (port) {
     var sprite = this.blockReceiver();
 
