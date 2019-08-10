@@ -1,6 +1,7 @@
 var port2 = ' '
 var datareturn = ' '
 var portatemp = ' '
+
 Process.prototype.connectArduino = function (port) {
     var sprite = this.blockReceiver();
 
@@ -50,6 +51,7 @@ Process.prototype.conectarPlaca = function (port) {
 };
 Process.prototype.enviarDado = function (port) {
     var sprite = this.blockReceiver();
+
     if(sprite.arduino.port == ' '){
         throw new Error(localize('Arduino not connected'));	
     }else{
@@ -59,6 +61,7 @@ Process.prototype.enviarDado = function (port) {
           });
     }
 };
+
 Process.prototype.PortaConectada = function (port) {
     var sprite = this.blockReceiver();
     if(sprite.arduino.port == ' '){
@@ -97,6 +100,7 @@ Process.prototype.enviarDadoParaPorta = function (dado,porta) {
           });
     }
 };
+
 Process.prototype.LedDados = function (port) {
     var sprite = this.blockReceiver();
     if(sprite.arduino.port != ' '){
@@ -117,6 +121,7 @@ Process.prototype.LedDados = function (port) {
           });
         return datareturn
     }
+
    }else{
     return 'Nao existe uma porta conectada'
    }
@@ -243,6 +248,50 @@ Process.prototype.conectadoPlaca = function (port) {
         return true;
     }else{
         return false
+
+   }
+};
+
+
+Process.prototype.disconectartArduino = function (port) {
+    var sprite = this.blockReceiver();
+        if(sprite.arduino.port != ' '){
+        sprite.arduino.port = ' ';
+        sprite.arduino.serial.close(function(err){
+            console.log('failed to open: '+err);
+          });
+    }       
+};
+Process.prototype.conectado = function (port) {
+    var sprite = this.blockReceiver();
+    if(sprite.arduino.port != ' '){
+        return true;
+    }else{
+        return false;
+    }        
+};
+ 
+
+Process.prototype.conectadoPlaca = function (port) {
+    var sprite = this.blockReceiver();
+    const SerialPort = require("browser-serialport").SerialPort 
+    if(sprite.arduino.port == port){
+        return true;
+    }else{
+        if(sprite.arduino.port != port){          
+            sprite.arduino.serial = new SerialPort(port, {
+                baudrate: 57600
+               }, false); 
+               sprite.arduino.serial.open(function (error) {
+                  if ( error ) {
+                    console.log('failed to open: '+error);
+                     sprite.arduino.port = ' '
+                 } else {
+                    console.log('Open: ');
+                    sprite.arduino.port = port
+                 }
+            });
+        }
     }        
 };
 Process.prototype.disconnectArduino = function (port) {

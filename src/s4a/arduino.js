@@ -117,10 +117,8 @@ Arduino.prototype.attemptConnection2 = function () {
             Arduino.getSerialPorts(function (ports) {
                 var portMenu = new MenuMorph(this, 'select a port'),
                     portCount = Object.keys(ports).length;
-
                 portsList.forEach(function(each){
                     portMenu.addItem(each, function () {
-                       
                         const SerialPort = require("browser-serialport").SerialPort
                         if(myself.port != each){
                             myself.serial = new SerialPort(each, {
@@ -129,12 +127,12 @@ Arduino.prototype.attemptConnection2 = function () {
                             myself.serial.open(function (error) {
                             if ( error ) {
                                 console.log('failed to open: '+error) ;
-                                ide.inform(myself.name, localize('failed to open: '+error));
+                                de.inform(myself.name, localize('failed to open: '+error));
                                 myself.port = ' '
                             } else {
                                 myself.port = each
                                 console.log('open');
-                                ide.inform(myself.name, localize('Você esta conectado à porta '+myself.port+'. Feliz EUREKA Patrulheiro!!'));
+                                ide.inform(myself.name, localize('Open'));
                             }
                             });
                         }
@@ -162,7 +160,6 @@ Arduino.prototype.attemptConnection2 = function () {
             ide.inform(myself.name, localize('There is already a board connected to this sprite'));
         }
     }
-
     if (this.justConnected) {
         this.justConnected = undefined;
         return;

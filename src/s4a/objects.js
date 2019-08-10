@@ -36,6 +36,7 @@ SpriteMorph.prototype.initEurekaBlocks = function(){
         type: 'command',
         category: 'Eureka',
         spec: 'Enviar %s para porta %s'
+
     };
     this.blocks.conectado =
     {
@@ -78,7 +79,6 @@ SpriteMorph.prototype.initEurekaBlocks = function(){
         spec: 'Ler %s da porta %s',
         transpilable: true
     };
-  
     this.blocks.disconectartArduino =
     {
         only: SpriteMorph,
@@ -413,7 +413,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push('-');
         blocks.push(blockBySelector('conectarPlaca'));
         blocks.push(blockBySelector('enviarDado'));
-       
+
         blocks.push('-');
         blocks.push(blockBySelector('conectado'));
         blocks.push(blockBySelector('conectadoPlaca'));
@@ -424,7 +424,6 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push('-');
         blocks.push(blockBySelector('LedDadosDaPorta'));
         blocks.push(blockBySelector('enviarDadoParaPorta'));
-        
         blocks.push(this.makeBlockButton());
     }
 
