@@ -127,12 +127,12 @@ Arduino.prototype.attemptConnection2 = function () {
                             myself.serial.open(function (error) {
                             if ( error ) {
                                 console.log('failed to open: '+error) ;
-                                de.inform(myself.name, localize('failed to open: '+error));
+                                ide.inform(myself.name, localize('Ocorreu uma falha ao tentar abrir a porta'));
                                 myself.port = ' '
                             } else {
                                 myself.port = each
                                 console.log('open');
-                                ide.inform(myself.name, localize('Open'));
+                                ide.inform(myself.name, localize('Você esta conectado à porta '+myself.port+'. Feliz EUREKA Patrulheiro!!'));
                             }
                             });
                         }
