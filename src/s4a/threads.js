@@ -1,5 +1,6 @@
 var port2 = ' '
 var datareturn = ' '
+var datareturn2 = ' '
 var portatemp = ' '
 
 Process.prototype.connectArduino = function (port) {
@@ -112,19 +113,25 @@ Process.prototype.LedDados = function (port) {
     var sprite = this.blockReceiver();
     if(sprite.arduino.port != ' '){
     if(port2 != port){
-    if(datareturn == ' '){
+    if(datareturn2 == ' '){
         sprite.arduino.serial.write(port, function(err, results) {
             sprite.arduino.serial.on('data', function(data) {
                 port2 = port
-                datareturn = data
+                datareturn2 = data
             });
             });
     }
     }else{
-        var datavar = datareturn
-        port2 = ' '
-        datareturn = ' '
-        return datavar
+        sprite.arduino.serial.write(port, function(err, results) {
+            sprite.arduino.serial.on('data', function(data) {
+                port2 = port
+                datareturn2 = data
+            });
+            });
+        // var datavar = datareturn
+        // port2 = ' '
+        // datareturn = ' '
+        return datareturn2
     }
 
    }else{
