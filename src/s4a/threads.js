@@ -76,6 +76,7 @@ Process.prototype.PortaConectada = function (port) {
         return sprite.arduino.port
     }
 };
+
 Process.prototype.enviarDadoParaPorta = function (dado,porta) {
     var sprite = this.blockReceiver();
     if(porta == ''){

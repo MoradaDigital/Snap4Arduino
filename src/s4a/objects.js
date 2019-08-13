@@ -7,6 +7,8 @@ SpriteMorph.prototype.init = function(globals) {
    
 };
 
+
+
 // Definition of a new Arduino Category
 
 SpriteMorph.prototype.categories.push('arduino');
@@ -38,6 +40,7 @@ SpriteMorph.prototype.initEurekaBlocks = function(){
         spec: 'Enviar %s para porta %s'
 
     };
+   
     this.blocks.conectado =
     {
         only: SpriteMorph,
@@ -268,6 +271,8 @@ SpriteMorph.prototype.originalBlockTemplates = SpriteMorph.prototype.blockTempla
 SpriteMorph.prototype.blockTemplates = function (category) {
     var myself = this,
         blocks = myself.originalBlockTemplates(category); 
+
+
 
     //  Button that triggers a connection attempt 
 
