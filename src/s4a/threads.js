@@ -76,7 +76,6 @@ Process.prototype.PortaConectada = function (port) {
         return sprite.arduino.port
     }
 };
-
 Process.prototype.enviarDadoParaPorta = function (dado,porta) {
     var sprite = this.blockReceiver();
     if(porta == ''){
@@ -202,48 +201,7 @@ Process.prototype.LedDadosDaPorta = function (dados,porta) {
    
  }
 };
-Process.prototype.Lertimeout = function (dados,time) {
-    var sprite = this.blockReceiver();
-    if(sprite.arduino.port != ' '){
-        if(port2 != dados){
-        if(datareturn == ' '){
-            sprite.arduino.serial.write(dados, function(err, results) {
-                sprite.arduino.serial.on('data', function(data) {
-                    port2 = dados
-                    datareturn = data
-                    console.log('Tempo:xxdxx '+data);
-                });
-                });
-        }
-        }else{
-            sprite.arduino.serial.write(dados, function(err, results) {
-                sprite.arduino.serial.on('data', function(data) {
-                    this.datareturn = data
-                    console.log('Tempo:xxdxx '+data);
-                });
-              });
-        }
-        while(time > 0){
-            sleep(1000)
-            console.log('Tempo: '+time);
-            time--            
-        }
-       }else{
-        return 'Nao existe uma porta conectada'
-       }
-   
-       console.log('Tempo zero: '+this.datareturn);
-       return this.datareturn
-};
 
-function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-      if ((new Date().getTime() - start) > milliseconds){
-        break;
-      }
-    }
-};
   
 Process.prototype.disconectartArduino = function (port) {
     var sprite = this.blockReceiver();
@@ -299,6 +257,7 @@ Process.prototype.conectado = function (port) {
     }        
 };
  
+
 
 Process.prototype.disconnectArduino = function (port) {
     var sprite = this.blockReceiver();

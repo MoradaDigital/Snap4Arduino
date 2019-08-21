@@ -4,10 +4,7 @@ SpriteMorph.prototype.originalInit = SpriteMorph.prototype.init;
 SpriteMorph.prototype.init = function(globals) {
     this.originalInit(globals);
     this.arduino = new Arduino(this);
-   
 };
-
-
 
 // Definition of a new Arduino Category
 
@@ -40,7 +37,6 @@ SpriteMorph.prototype.initEurekaBlocks = function(){
         spec: 'Enviar %s para porta %s'
 
     };
-   
     this.blocks.conectado =
     {
         only: SpriteMorph,
@@ -92,8 +88,8 @@ SpriteMorph.prototype.initEurekaBlocks = function(){
 
 }
 
-SpriteMorph.prototype.originalInitBlocks = SpriteMorph.prototype.initBlocks;
 
+SpriteMorph.prototype.originalInitBlocks = SpriteMorph.prototype.initBlocks;
 SpriteMorph.prototype.initArduinoBlocks = function () {
 
     this.blocks.reportAnalogReading = 
@@ -255,8 +251,6 @@ SpriteMorph.prototype.initArduinoBlocks = function () {
     StageMorph.prototype.codeMappings['pwmWrite'] = '  s4a.analogWrite(<#1>, <#2>);';
 }
 
-SpriteMorph.prototype.eurekaInitBlocks = SpriteMorph.prototype.eurekainitBlocks;
-
 SpriteMorph.prototype.initBlocks =  function() {
     this.originalInitBlocks();
     this.initArduinoBlocks();
@@ -272,8 +266,6 @@ SpriteMorph.prototype.blockTemplates = function (category) {
     var myself = this,
         blocks = myself.originalBlockTemplates(category); 
 
-
-
     //  Button that triggers a connection attempt 
 
     this.arduinoConnectButton = new PushButtonMorph(
@@ -286,6 +278,15 @@ SpriteMorph.prototype.blockTemplates = function (category) {
 
     //  Button that triggers a disconnection from board
 
+    this.arduinoDisconnectButton = new PushButtonMorph(
+            null,
+            function () {
+                myself.arduino.disconnect();;
+            },
+            'Disconnect Arduino'
+            );
+
+
     this.eurekaConnectButton = new PushButtonMorph(
         null,
         function(){
@@ -294,14 +295,6 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         'Conectar à Placa'
     );
     
-
-    this.arduinoDisconnectButton = new PushButtonMorph(
-            null,
-            function () {
-                myself.arduino.disconnect();;
-            },
-            'Disconnect Arduino'
-            );
 
     function arduinoWatcherToggle (selector) {
         if (StageMorph.prototype.hiddenPrimitives[selector]) {
@@ -431,6 +424,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push(blockBySelector('enviarDadoParaPorta'));
         blocks.push(this.makeBlockButton());
     }
+
 
     return blocks;
 };

@@ -8,6 +8,8 @@ var serialPort = require("browser-serialport");
         cont++;
     });
 });
+
+// utility functions
 unique = function (anArray) {
     return anArray.filter(function (elem, pos) {
         return anArray.indexOf(elem) == pos;
@@ -24,7 +26,6 @@ function Arduino (owner) {
     this.disconnecting = false;  // Flag to avoid serialport communication when it is being closed
     this.justConnected = false;	// Flag to avoid double attempts
     this.keepAliveIntervalID = null;
-    
 };
 
 // This function just asks for the version and checks if we've received it after a timeout
@@ -67,11 +68,6 @@ Arduino.prototype.disconnect = function (silent, force) {
     }
 };
 
-Arduino.prototype.message = function () {
-  
-    
-    ide.inform(this.owner.name, localize('Nao existe uma porta conectada'));
-};
 // This should belong to the IDE
 Arduino.prototype.showMessage = function (msg) {
     if (!this.message) { this.message = new DialogBoxMorph() };
@@ -106,6 +102,7 @@ Arduino.prototype.hideMessage = function () {
         this.message = null;
     }
 };
+
 Arduino.prototype.attemptConnection2 = function () {
     var myself = this,
         bleEnabled = Arduino.prototype.bleEnabled;
@@ -153,7 +150,7 @@ Arduino.prototype.attemptConnection2 = function () {
                 if (networkPortsEnabled || bleEnabled || portCount > 1) {
                     portMenu.popUpAtHand(world);
                 } else if (!networkPortsEnabled && portCount === 1) {
-                    myself.connect(Object.keys(ports)[0]);
+                   // myself.connect(Object.keys(ports)[0]);
                 }
             });
         } else {
@@ -165,11 +162,12 @@ Arduino.prototype.attemptConnection2 = function () {
         return;
     }
 };
+
 Arduino.prototype.attemptConnection = function () {
     var myself = this,
         bleEnabled = Arduino.prototype.bleEnabled;
         networkPortsEnabled = Arduino.prototype.networkPortsEnabled;
-        
+
     if (!this.connecting) {
         if (this.board === undefined) {
             // Get list of ports (Arduino compatible)
@@ -421,16 +419,41 @@ Arduino.prototype.connect = function (port, verify, channel) {
             if (myself.board && !myself.board.versionReceived) {
                 var port = myself.board.sp.path;
 
-                myself.hideMessage();
-                ide.inform(
-                        myself.owner.name,
-                        localize('Could not talk to Arduino in port\n')
-                        + port + '\n\n' + localize('Check if firmata is loaded.')
-                        );
-                
-                // silent and forced closing of the connection attempt
-                myself.disconnect(true, true);
-             
+                // myself.hideMessage();
+                // ide.inform(
+                //         myself.owner.name,
+                //         localize('Could not talk to Arduino in port\n')
+                //         + port + '\n\n' + localize('Check if firmata is loaded.')
+                //         );
+                //
+                // // silent and forced closing of the connection attempt
+                // myself.disconnect(true, true);
+                var btSerial = new (require('bluetooth-serial-port')).BluetoothSerialPort();
+
+                  btSerial.on('found', function(address, name) {
+                  btSerial.findSerialPortChannel(address, function(channel) {
+                    btSerial.connect(address, channel, function() {
+                        console.log('connected');
+                        ide.inform(myself.owner.name, localize('An Arduino board has been connected. Happy prototyping!'));
+                        btSerial.write(Buffer.from('my data', 'utf-8'), function(err, bytesWritten) {
+                          if (err) console.log(err);
+                        });
+
+                        btSerial.on('data', function(buffer) {
+                          console.log(buffer.toString('utf-8'));
+                        });
+                      }, function () {
+                        console.log('cannot connect');
+                      });
+                        // close the connection when you're ready
+                        btSerial.close();
+                      }, function() {
+                        console.log('found nothing');
+                        ide.inform(myself.owner.name, localize('Arduino board not connected"'));
+                      });
+                    });
+
+                    btSerial.inquire();
             }
         }, 10000);
     };
