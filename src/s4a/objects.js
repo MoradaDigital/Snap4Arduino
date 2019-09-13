@@ -27,6 +27,20 @@ SpriteMorph.prototype.initEurekaBlocks = function(){
         category: 'Eureka',
         spec: 'Conectar ws %s'
     };
+    this.blocks.enviarws =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'Enviar ws %s'
+    };
+    this.blocks.desconectarws =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'Desconectar ws'
+    };
     this.blocks.enviarDado =
     {
         only: SpriteMorph,
@@ -417,12 +431,14 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push(blockBySelector('conectarPlaca'));
         blocks.push(blockBySelector('conectarWs'));
         blocks.push(blockBySelector('enviarDado'));
+        blocks.push(blockBySelector('enviarws'));
 
         blocks.push('-');
         blocks.push(blockBySelector('conectado'));
         blocks.push(blockBySelector('conectadoPlaca'));
         blocks.push(blockBySelector('PortaConectada'));
         blocks.push(blockBySelector('disconectartArduino'));
+        blocks.push(blockBySelector('desconectarws'));
         blocks.push('-');
         blocks.push(blockBySelector('LedDados'));
         blocks.push('-');

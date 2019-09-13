@@ -2,7 +2,7 @@ var port2 = ' '
 var datareturn = ' '
 var datareturn2 = ' '
 var portatemp = ' '
-
+var connection = ' '
 Process.prototype.connectArduino = function (port) {
     var sprite = this.blockReceiver();
 
@@ -57,19 +57,35 @@ Process.prototype.conectarPlaca = function (port) {
     
 };
 Process.prototype.conectarWs = function (port) {
-    var connection = new WebSocket('ws://'+port);
+   connection = new WebSocket('ws://'+port);
 
     // When the connection is open, send some data to the server
    connection.onopen = function () {
-   connection.send('L0.1'); // Send the message 'Ping' to the server
+   
     console.log(intervalo);
 
-    if (connection.readyState === WebSocket.OPEN) {
-     connection.close();
-    }
+    
   };
     
 };
+Process.prototype.enviarws = function (port) {
+
+    // When the connection is open, send some data to the server
+   /*connection.onopen = function () {
+   connection.send(port); // Send the message 'Ping' to the server
+    console.log(intervalo);
+
+    
+  };*/
+  connection.send(port);
+};
+Process.prototype.desconectarws = function (port) {
+    if (connection.readyState === WebSocket.OPEN) {
+     connection.close();
+    }
+};
+    
+
 Process.prototype.enviarDado = function (port) {
     var sprite = this.blockReceiver();
 
