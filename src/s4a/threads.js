@@ -55,6 +55,20 @@ Process.prototype.conectarPlaca = function (port) {
     }
     
 };
+Process.prototype.conectarWs = function (port) {
+    var connection = new WebSocket('ws://'+port);
+
+    // When the connection is open, send some data to the server
+   connection.onopen = function () {
+   connection.send('L0.1'); // Send the message 'Ping' to the server
+    console.log(intervalo);
+
+    if (connection.readyState === WebSocket.OPEN) {
+     connection.close();
+    }
+  };
+    
+};
 Process.prototype.enviarDado = function (port) {
     var sprite = this.blockReceiver();
 

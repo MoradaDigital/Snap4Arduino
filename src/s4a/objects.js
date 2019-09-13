@@ -22,6 +22,13 @@ SpriteMorph.prototype.initEurekaBlocks = function(){
         category: 'Eureka',
         spec: 'Conectar placa na porta %s'
     };
+    this.blocks.conectarWs =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'Conectar ws %s'
+    };
     this.blocks.enviarDado =
     {
         only: SpriteMorph,
@@ -410,6 +417,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push(this.eurekaConnectButton);
         blocks.push('-');
         blocks.push(blockBySelector('conectarPlaca'));
+        blocks.push(blockBySelector('conectarWs'));
         blocks.push(blockBySelector('enviarDado'));
 
         blocks.push('-');
