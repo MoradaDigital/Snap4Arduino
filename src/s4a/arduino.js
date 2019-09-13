@@ -5,9 +5,23 @@ unique = function (anArray) {
     });
 };
 
+var portsList = [' ',' ',' ',' ',' ',' '];
+var cont = 0
+var serialPort = require("browser-serialport");
+    serialPort.list(function (err, ports) {
+        ports.forEach(function(port) {
+        portsList[cont] = port.comName;
+        console.log('open: '+portsList[cont]);
+        cont++;
+    });
+});
+
+
 // Arduino prototype
 function Arduino (owner) {
     this.owner = owner;
+    this.port = ' ';
+    this.serial = null;
     this.board = undefined;	// Reference to arduino board - to be created by new firmata.Board()
     this.connecting = false;	// Flag to avoid multiple attempts to connect
     this.disconnecting = false;  // Flag to avoid serialport communication when it is being closed
@@ -87,6 +101,66 @@ Arduino.prototype.hideMessage = function () {
     if (this.message) {
         this.message.cancel();
         this.message = null;
+    }
+};
+
+Arduino.prototype.attemptConnection2 = function () {
+    var myself = this,
+        bleEnabled = Arduino.prototype.bleEnabled;
+        networkPortsEnabled = Arduino.prototype.networkPortsEnabled;
+        
+    if (!this.connecting) {
+        if (this.board === undefined) {
+            // Get list of ports (Arduino compatible)
+            Arduino.getSerialPorts(function (ports) {
+                var portMenu = new MenuMorph(this, 'select a port'),
+                    portCount = Object.keys(ports).length;
+                portsList.forEach(function(each){
+                    portMenu.addItem(each, function () {
+                        const SerialPort = require("browser-serialport").SerialPort
+                        if(myself.port != each){
+                            myself.serial = new SerialPort(each, {
+                                baudrate: 57600
+                               }, false); 
+                            myself.serial.open(function (error) {
+                            if ( error ) {
+                                console.log('failed to open: '+error) ;
+                                ide.inform(myself.name, localize('Ocorreu uma falha ao tentar abrir a porta'));
+                                myself.port = ' '
+                            } else {
+                                myself.port = each
+                                console.log('open');
+                                ide.inform(myself.name, localize('Você esta conectado à porta '+myself.port+'. Feliz EUREKA Patrulheiro!!'));
+                            }
+                            });
+                        }
+                    })
+                });
+                if (networkPortsEnabled) {
+                    portMenu.addLine();
+                    portMenu.addItem('Network port', function () {
+                        myself.networkDialog();
+                    });
+                }
+                if (bleEnabled) {
+                    portMenu.addLine();
+                    portMenu.addItem('BLE device', function () {
+                        myself.bleDialog();
+                    });
+                }
+                if (networkPortsEnabled || bleEnabled || portCount > 1) {
+                    portMenu.popUpAtHand(world);
+                } else if (!networkPortsEnabled && portCount === 1) {
+                   // myself.connect(Object.keys(ports)[0]);
+                }
+            });
+        } else {
+            ide.inform(myself.name, localize('There is already a board connected to this sprite'));
+        }
+    }
+    if (this.justConnected) {
+        this.justConnected = undefined;
+        return;
     }
 };
 

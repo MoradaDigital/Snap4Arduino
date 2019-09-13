@@ -1,5 +1,3 @@
-// init decorator
-
 SpriteMorph.prototype.originalInit = SpriteMorph.prototype.init;
 SpriteMorph.prototype.init = function(globals) {
     this.originalInit(globals);
@@ -10,6 +8,91 @@ SpriteMorph.prototype.init = function(globals) {
 
 SpriteMorph.prototype.categories.push('arduino');
 SpriteMorph.prototype.blockColor['arduino'] = new Color(24, 167, 181);
+
+SpriteMorph.prototype.categories.push('Eureka');
+SpriteMorph.prototype.blockColor['Eureka'] = new Color(255, 214, 0);
+
+SpriteMorph.prototype.initEurekaBlocks = function(){
+    this.blocks.conectarPlaca =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'Conectar placa na porta %s'
+    };
+    this.blocks.conectarWs =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'Conectar ws %s'
+    };
+    this.blocks.enviarDado =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'Enviar %s'
+    };
+    this.blocks.enviarDadoParaPorta =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'Enviar %s para porta %s'
+
+    };
+    this.blocks.conectado =
+    {
+        only: SpriteMorph,
+        type: 'predicate',
+        category: 'Eureka',
+        spec: 'conectado?',
+        transpilable: false
+    };
+
+    this.blocks.conectadoPlaca =
+    {
+        only: SpriteMorph,
+        type: 'predicate',
+        category: 'Eureka',
+        spec: 'conectado %s ?',
+        transpilable: false
+    };
+    this.blocks.LedDados = 
+    {
+        only: SpriteMorph,
+        type: 'reporter',
+        category: 'Eureka',
+        spec: 'Ler %s',
+        transpilable: true
+    };
+    this.blocks.PortaConectada = 
+    {
+        only: SpriteMorph,
+        type: 'reporter',
+        category: 'Eureka',
+        spec: 'Porta conectada?',
+        transpilable: true
+    };
+    this.blocks.LedDadosDaPorta = 
+    {
+        only: SpriteMorph,
+        type: 'reporter',
+        category: 'Eureka',
+        spec: 'Ler %s da porta %s',
+        transpilable: true
+    };
+    this.blocks.disconectartArduino =
+    {
+        only: SpriteMorph,
+        type: 'command',
+        category: 'Eureka',
+        spec: 'desconectar'
+    };
+
+}
+
 
 SpriteMorph.prototype.originalInitBlocks = SpriteMorph.prototype.initBlocks;
 SpriteMorph.prototype.initArduinoBlocks = function () {
@@ -176,6 +259,7 @@ SpriteMorph.prototype.initArduinoBlocks = function () {
 SpriteMorph.prototype.initBlocks =  function() {
     this.originalInitBlocks();
     this.initArduinoBlocks();
+    this.initEurekaBlocks();
 };
 
 SpriteMorph.prototype.initBlocks();
@@ -206,6 +290,16 @@ SpriteMorph.prototype.blockTemplates = function (category) {
             },
             'Disconnect Arduino'
             );
+
+
+    this.eurekaConnectButton = new PushButtonMorph(
+        null,
+        function(){
+            myself.arduino.attemptConnection2();
+        },
+        'Conectar à Placa'
+    );
+    
 
     function arduinoWatcherToggle (selector) {
         if (StageMorph.prototype.hiddenPrimitives[selector]) {
@@ -317,7 +411,26 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         button.selector = 'addCustomBlock';
         button.showHelp = BlockMorph.prototype.showHelp;
         blocks.push(button);
+    }else if (category === 'Eureka'){
+        blocks.push(this.eurekaConnectButton);
+        blocks.push('-');
+        blocks.push(blockBySelector('conectarPlaca'));
+        blocks.push(blockBySelector('conectarWs'));
+        blocks.push(blockBySelector('enviarDado'));
+
+        blocks.push('-');
+        blocks.push(blockBySelector('conectado'));
+        blocks.push(blockBySelector('conectadoPlaca'));
+        blocks.push(blockBySelector('PortaConectada'));
+        blocks.push(blockBySelector('disconectartArduino'));
+        blocks.push('-');
+        blocks.push(blockBySelector('LedDados'));
+        blocks.push('-');
+        blocks.push(blockBySelector('LedDadosDaPorta'));
+        blocks.push(blockBySelector('enviarDadoParaPorta'));
+        blocks.push(this.makeBlockButton());
     }
+
 
     return blocks;
 };
