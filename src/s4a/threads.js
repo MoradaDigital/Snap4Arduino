@@ -56,27 +56,57 @@ Process.prototype.conectarPlaca = function (port) {
     
 };
 Process.prototype.conectarWs = function (port) {
-
-    connection = new WebSocket('ws://'+port);
+    var sprite = this.blockReceiver();
+    sprite.arduino.conectar = new WebSocket('ws://'+port);
 
     // When the connection is open, send some data to the server
-   connection.onopen = function () {
-   connection.send('L0.1'); // Send the message 'Ping' to the server
+    sprite.arduino.conectar.onopen = function () {
+        sprite.arduino.conectar.send('L0.1'); // Send the message 'Ping' to the server
 
   };
     
 };
 Process.prototype.enviarws = function (port) {
-    if (connection != ' '){
-        connection.send(port); // Send the message 'Ping' to the server 
+    var sprite = this.blockReceiver();
+
+    if (sprite.arduino.conectar != ' '){
+        sprite.arduino.conectar.send(port); // Send the message 'Ping' to the server 
 
     }
 };
+Process.prototype.conectadows = function (port) {
+    var sprite = this.blockReceiver();
+
+    if (sprite.arduino.conectar != ' '){
+       return true
+    }else{
+        return false
+    }
+};
+
 Process.prototype.desconectarws = function (port) {
-    if (connection.readyState === WebSocket.OPEN) {
-     connection.close();
+    var sprite = this.blockReceiver();
+
+    if (sprite.arduino.conectar.readyState === WebSocket.OPEN) {
+        sprite.arduino.conectar.close();
     }   
 };
+Process.prototype.LedDadosws = function (port) {
+    var sprite = this.blockReceiver();
+
+    sprite.arduino.conectar.send(port);
+    if(message == ' '){
+        sprite.arduino.conectar.onmessage = function(event) {
+            message = event.data;
+            console.log(message);
+        };
+    }else{
+        return message
+    }
+    
+};
+
+
 Process.prototype.enviarDado = function (port) {
     var sprite = this.blockReceiver();
 

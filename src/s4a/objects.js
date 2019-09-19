@@ -1,3 +1,4 @@
+
 // init decorator
 
 SpriteMorph.prototype.originalInit = SpriteMorph.prototype.init;
@@ -114,6 +115,22 @@ SpriteMorph.prototype.cyberBT = function(){
         type: 'command',
         category: 'CyberWS',
         spec: 'Desconectar'
+    };
+    this.blocks.conectadows =
+    {
+        only: SpriteMorph,
+        type: 'predicate',
+        category: 'CyberWS',
+        spec: 'conectado?',
+        transpilable: false
+    };
+    this.blocks.LedDadosws =
+    {
+        only: SpriteMorph,
+        type: 'reporter',
+        category: 'CyberWS',
+        spec: 'Ler %s',
+        transpilable: true
     };
   
  }
@@ -468,10 +485,14 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push(this.makeBlockButton());
     }else if(category === 'CyberWS'){
         blocks.push(this.eurekaConnectWS);
+        blocks.push('-');
         blocks.push(blockBySelector('conectarWs'));
         blocks.push('-');
         blocks.push(blockBySelector('enviarws'));
-       
+        blocks.push(blockBySelector('LedDadosws'));
+        blocks.push('-');
+        blocks.push(blockBySelector('conectadows'));
+        blocks.push('-');
         blocks.push(blockBySelector('desconectarws'));
         blocks.push(this.makeBlockButton());
   
