@@ -32,7 +32,6 @@ Process.prototype.connectArduino = function (port) {
     this.pushContext('doYield');
     this.pushContext();
 };
-
 Process.prototype.conectarPlaca = function (port) {
     var sprite = this.blockReceiver();
     const SerialPort = require("browser-serialport").SerialPort 
@@ -57,35 +56,27 @@ Process.prototype.conectarPlaca = function (port) {
     
 };
 Process.prototype.conectarWs = function (port) {
-   connection = new WebSocket('ws://'+port);
+
+    connection = new WebSocket('ws://'+port);
 
     // When the connection is open, send some data to the server
    connection.onopen = function () {
-   
-    console.log(intervalo);
+   connection.send('L0.1'); // Send the message 'Ping' to the server
 
-    
   };
     
 };
 Process.prototype.enviarws = function (port) {
+    if (connection != ' '){
+        connection.send(port); // Send the message 'Ping' to the server 
 
-    // When the connection is open, send some data to the server
-   /*connection.onopen = function () {
-   connection.send(port); // Send the message 'Ping' to the server
-    console.log(intervalo);
-
-    
-  };*/
-  connection.send(port);
+    }
 };
 Process.prototype.desconectarws = function (port) {
     if (connection.readyState === WebSocket.OPEN) {
      connection.close();
-    }
+    }   
 };
-    
-
 Process.prototype.enviarDado = function (port) {
     var sprite = this.blockReceiver();
 
@@ -288,6 +279,7 @@ Process.prototype.conectado = function (port) {
     }        
 };
  
+
 
 Process.prototype.disconnectArduino = function (port) {
     var sprite = this.blockReceiver();
