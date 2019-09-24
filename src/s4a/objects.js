@@ -12,20 +12,20 @@ SpriteMorph.prototype.init = function(globals) {
 SpriteMorph.prototype.categories.push('arduino');
 SpriteMorph.prototype.blockColor['arduino'] = new Color(24, 167, 181);
 
-SpriteMorph.prototype.categories.push('CyberBT');
-SpriteMorph.prototype.blockColor['CyberBT'] = new Color(116, 168, 244);
+SpriteMorph.prototype.categories.push('EurekaSerial');
+SpriteMorph.prototype.blockColor['EurekaSerial'] = new Color(116, 168, 244);
  
-SpriteMorph.prototype.categories.push('CyberWS');
-SpriteMorph.prototype.blockColor['CyberWS'] = new Color(134, 195, 40);
+SpriteMorph.prototype.categories.push('EurekaWS');
+SpriteMorph.prototype.blockColor['EurekaWS'] = new Color(134, 195, 40);
  
 
 
-SpriteMorph.prototype.cyberBT = function(){
+SpriteMorph.prototype.EurekaSerial = function(){
     this.blocks.conectarPlaca =
     {
         only: SpriteMorph,
         type: 'command',
-        category: 'CyberBT',
+        category: 'EurekaSerial',
         spec: 'Conectar placa na porta %s'
     };
   
@@ -33,14 +33,14 @@ SpriteMorph.prototype.cyberBT = function(){
     {
         only: SpriteMorph,
         type: 'command',
-        category: 'CyberBT',
+        category: 'EurekaSerial',
         spec: 'Enviar %s'
     };
     this.blocks.enviarDadoParaPorta =
     {
         only: SpriteMorph,
         type: 'command',
-        category: 'CyberBT',
+        category: 'EurekaSerial',
         spec: 'Enviar %s para porta %s'
   
     };
@@ -48,7 +48,7 @@ SpriteMorph.prototype.cyberBT = function(){
     {
         only: SpriteMorph,
         type: 'predicate',
-        category: 'CyberBT',
+        category: 'EurekaSerial',
         spec: 'conectado?',
         transpilable: false
     };
@@ -56,7 +56,7 @@ SpriteMorph.prototype.cyberBT = function(){
     {
         only: SpriteMorph,
         type: 'predicate',
-        category: 'CyberBT',
+        category: 'EurekaSerial',
         spec: 'conectado %s ?',
         transpilable: false
     };
@@ -64,7 +64,7 @@ SpriteMorph.prototype.cyberBT = function(){
     {
         only: SpriteMorph,
         type: 'reporter',
-        category: 'CyberBT',
+        category: 'EurekaSerial',
         spec: 'Ler %s',
         transpilable: true
     };
@@ -72,7 +72,7 @@ SpriteMorph.prototype.cyberBT = function(){
     {
         only: SpriteMorph,
         type: 'reporter',
-        category: 'CyberBT',
+        category: 'EurekaSerial',
         spec: 'Porta conectada?',
         transpilable: true
     };
@@ -80,7 +80,7 @@ SpriteMorph.prototype.cyberBT = function(){
     {
         only: SpriteMorph,
         type: 'reporter',
-        category: 'CyberBT',
+        category: 'EurekaSerial',
         spec: 'Ler %s da porta %s',
         transpilable: true
     };
@@ -88,39 +88,39 @@ SpriteMorph.prototype.cyberBT = function(){
     {
         only: SpriteMorph,
         type: 'command',
-        category: 'CyberBT',
+        category: 'EurekaSerial',
         spec: 'desconectar'
     };
   
  }
 
- SpriteMorph.prototype.cyberWS = function(){
+ SpriteMorph.prototype.EurekaWS = function(){
     this.blocks.conectarWs =
     {
         only: SpriteMorph,
         type: 'command',
-        category: 'CyberWS',
+        category: 'EurekaWS',
         spec: 'Conectar ip %s porta %s'
     };
     this.blocks.enviarws =
     {
         only: SpriteMorph,
         type: 'command',
-        category: 'CyberWS',
+        category: 'EurekaWS',
         spec: 'Enviar %s'
     };
     this.blocks.desconectarws =
     {
         only: SpriteMorph,
         type: 'command',
-        category: 'CyberWS',
+        category: 'EurekaWS',
         spec: 'Desconectar'
     };
     this.blocks.conectadows =
     {
         only: SpriteMorph,
         type: 'predicate',
-        category: 'CyberWS',
+        category: 'EurekaWS',
         spec: 'conectado?',
         transpilable: false
     };
@@ -128,7 +128,7 @@ SpriteMorph.prototype.cyberBT = function(){
     {
         only: SpriteMorph,
         type: 'reporter',
-        category: 'CyberWS',
+        category: 'EurekaWS',
         spec: 'Ler %s',
         transpilable: true
     };
@@ -305,8 +305,8 @@ SpriteMorph.prototype.initArduinoBlocks = function () {
 SpriteMorph.prototype.initBlocks =  function() {
     this.originalInitBlocks();
     this.initArduinoBlocks();
-    this.cyberBT();
-    this.cyberWS();
+    this.EurekaSerial();
+    this.EurekaWS();
 };
 
 SpriteMorph.prototype.initBlocks();
@@ -467,7 +467,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         button.selector = 'addCustomBlock';
         button.showHelp = BlockMorph.prototype.showHelp;
         blocks.push(button);
-    }else if (category === 'CyberBT'){
+    }else if (category === 'EurekaSerial'){
         blocks.push(this.eurekaConnectBT);
         blocks.push('-');
         blocks.push(blockBySelector('conectarPlaca'));
@@ -483,7 +483,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push(blockBySelector('LedDadosDaPorta'));
         blocks.push(blockBySelector('enviarDadoParaPorta'));
         blocks.push(this.makeBlockButton());
-    }else if(category === 'CyberWS'){
+    }else if(category === 'EurekaWS'){
         blocks.push(this.eurekaConnectWS);
         blocks.push('-');
         blocks.push(blockBySelector('conectarWs'));
